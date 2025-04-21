@@ -2,7 +2,7 @@ import { Steps } from "@/components/steps";
 import { Welcome } from "@/components/welcome";
 import { View } from "react-native";
 import { router } from "expo-router";
-import { Button } from "@/components/Button";
+import { Button } from "@/components/button";
 
 export default function Index() {
   return (

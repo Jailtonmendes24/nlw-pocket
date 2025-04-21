@@ -7,6 +7,7 @@ import { PlaceProps } from "@/components/place";
 import { Places } from "@/components/places";
 import MapView, { Callout, Marker } from "react-native-maps";
 import * as Location from "expo-location";
+import { router } from "expo-router";
 
 type MarketsProps = PlaceProps & {
   latitude: number;
@@ -17,12 +18,11 @@ export default function Home() {
   const [categories, setCategories] = useState<CategoryProps>([]);
   const [category, setCategory] = useState("");
   const [markets, setMarkets] = useState<MarketsProps[]>([]);
-  //Estado uma variavel que respeita o principio da imutabilidade, não pode ser alterada diretamente
-  //Estado tem o poder de renderizar a tela
+
 
   const currentLocation = {
-    latitude: -23.561187293883442,
-    longitude: -46.656451388116494,
+    latitude: -8.0053036,
+    longitude: -34.9103207,
   };
 
   async function fetchCategories() {
@@ -51,20 +51,21 @@ export default function Home() {
   }
 
   // Pegar localização do usuário
-  async function getCurrentLocation() {
-    try {
-      const { granted } = await Location.requestForegroundPermissionsAsync();
+  // async function getCurrentLocation() {
+  //   try {
+  //     const { granted } = await Location.requestForegroundPermissionsAsync();
 
-      if (granted) {
-        const location = await Location.getCurrentPositionAsync();
-        console.log("🚀 ~ getCurrentLocation ~ location:", location);
-      }
-    } catch (error) {
-      console.log("🚀 ~ getCurrentLocation ~ error:", error);
-    }
-  }
+  //     if (granted) {
+  //       const location = await Location.getCurrentPositionAsync();
+  //       console.log("🚀 ~ getCurrentLocation ~ location:", location);
+  //     }
+  //   } catch (error) {
+  //     console.log("🚀 ~ getCurrentLocation ~ error:", error);
+  //   }
+  // }
 
   useEffect(() => {
+    // getCurrentLocation();
     fetchCategories();
   }, []);
 
@@ -85,8 +86,8 @@ export default function Home() {
         initialRegion={{
           latitude: currentLocation.latitude,
           longitude: currentLocation.longitude,
-          latitudeDelta: 0.001,
-          longitudeDelta: 0.001,
+          latitudeDelta: 0.01,
+          longitudeDelta: 0.01,
         }}
       >
         <Marker
@@ -108,8 +109,8 @@ export default function Home() {
             }}
             image={require("@/assets/pin.png")}
           >
-            <Callout>
-              <View>
+            <Callout onPress={() => router.navigate(`/market/${item.id}`)}>
+              <View style={{ padding: 20 }}>
                 <Text
                   style={{
                     fontSize: 14,
@@ -119,11 +120,10 @@ export default function Home() {
                 >
                   {item.name}
                 </Text>
-
                 <Text
                   style={{
                     fontSize: 12,
-                    color: colors.gray[600],
+                    color: colors.gray[400],
                     fontFamily: fontFamily.regular,
                   }}
                 >
